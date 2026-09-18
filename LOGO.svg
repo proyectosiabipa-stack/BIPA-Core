@@ -1,10 +1,10 @@
 <svg width="240" height="88" viewBox="0 0 240 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="240" height="88" rx="18" fill="#0B111B"/>
-  <rect y="0" width="240" height="16" fill="url(#paint1_linear)"/>
-  <rect x="20" y="26" width="48" height="48" rx="14" fill="url(#paint0_linear)"/>
+  <rect width="240" height="88" rx="18" fill="transparent"/>
+  <rect y="0" width="240" height="16" fill="transparent"/>
+  <rect x="20" y="20" width="48" height="48" rx="14" fill="#062A20"/>
   <path d="M36 34H52.5C58.9 34 64 39.1 64 45.5C64 51.9 58.9 57 52.5 57H36V34ZM45 42.2V48.8H52.2C54.4 48.8 56.2 47.1 56.2 45.2C56.2 43.3 54.4 41.6 52.2 41.6H45Z" fill="#071019"/>
-  <text x="86" y="52" fill="#F4FFF8" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">BIPA</text>
-  <text x="86" y="68" fill="#66EDE0" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="2.4">CORE</text>
+  <text x="86" y="46" fill="#10231C" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">BIPA</text>
+  <text x="86" y="64" fill="#607069" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="2.4">CORE</text>
   <defs>
     <linearGradient id="paint0_linear" x1="20" y1="26" x2="68" y2="74" gradientUnits="userSpaceOnUse">
       <stop stop-color="#00D9F6"/>
