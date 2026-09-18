@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080b12">
+  <meta name="description" content="BIPA Core — Centro de comando e inteligencia para la operación de BIPA.">
+  <title>BIPA Core — Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#apps">Saltar a las aplicaciones</a>
+  <div class="environment" aria-hidden="true">
+    <!-- Para usar video propio, reemplaza el canvas por:
+    <video class="background-video" autoplay muted loop playsinline poster="poster.webp">
+      <source src="command-center.webm" type="video/webm"><source src="command-center.mp4" type="video/mp4">
+    </video> -->
+    <canvas id="data-canvas"></canvas><div class="environment__grid"></div><div class="environment__vignette"></div><div class="cursor-orb" id="cursor-orb"></div>
+  </div>
+  <div class="shell">
+    <header class="topbar reveal" data-delay="0">
+      <a class="brand" href="#" aria-label="BIPA Core, inicio"><img src="LOGO.svg" alt="BIPA Core" class="brand__logo"></a>
+      <div class="system-state" aria-label="Estado del sistema"><span class="pulse"></span><span>Centro operativo</span><span class="divider"></span><time id="system-time">00:00:00</time><span class="zone">VET</span></div>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__signal reveal" data-delay="80"><span class="signal-icon"></span>Business Intelligence Command Center</div>
+        <h1 id="hero-title" class="hero__title reveal" data-delay="150">Analiza, decide y actúa<br><span>con información en tiempo real</span></h1>
+        <p class="hero__copy reveal" data-delay="230">El núcleo de inteligencia de BIPA. Una visión conectada de la operación para convertir señales en decisiones y decisiones en resultados.</p>
+        <div class="telemetry reveal" data-delay="300"><span><i></i> Plataformas conectadas</span><span><i></i> Datos sincronizados</span><span><i></i> Acceso seguro</span></div>
+      </section>
+      <section id="apps" class="portals reveal" data-delay="360" aria-labelledby="portals-title">
+        <div class="section-heading"><div><p>Módulos principales</p><h2 id="portals-title">Selecciona tu centro de operación</h2></div><span>02 / MÓDULOS ACTIVOS</span></div>
+        <div class="portal-grid">
+          <article class="portal-card" data-accent="cyan">
+            <div class="card-glow"></div><div class="card-particles"></div>
+            <div class="card-top"><span>MÓDULO / 01</span><span class="status"><i></i> ONLINE</span></div>
+            <div class="card-icon"><svg viewBox="0 0 48 48"><path d="M8 38V25h8v13M20 38V17h8v21M32 38V9h8v29M5 38h38"/><path class="accent" d="m8 19 10-7 8 4L40 5"/></svg></div>
+            <div class="card-content"><p class="eyebrow">INTELIGENCIA · CLIENTES · CRECIMIENTO</p><h3>BIPA Inteligencia<br>Comercial</h3><p>Activa clientes, descubre oportunidades y convierte los datos comerciales en acciones de alto impacto.</p></div>
+            <a class="card-cta ripple-target" href="https://proyectosiabipa-stack.github.io/ACTIVACION-DE-CLIENTES-/" target="_blank" rel="noopener noreferrer" aria-label="Abrir BIPA Inteligencia Comercial"><span>Ingresar al módulo</span><svg viewBox="0 0 20 20"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a>
+          </article>
+          <article class="portal-card" data-accent="emerald">
+            <div class="card-glow"></div><div class="card-particles"></div>
+            <div class="card-top"><span>MÓDULO / 02</span><span class="status"><i></i> ONLINE</span></div>
+            <div class="card-icon"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="10"/><circle class="fill" cx="24" cy="24" r="3"/><path class="accent" d="M24 24 37 11M24 4v4M44 24h-4M24 44v-4M4 24h4"/></svg></div>
+            <div class="card-content"><p class="eyebrow">RADAR · TRAZABILIDAD · OPERACIÓN</p><h3>BIPA Radar</h3><p>Monitorea indicadores, trazabilidad y desempeño operativo desde una visión centralizada y siempre actualizada.</p></div>
+            <a class="card-cta ripple-target" href="https://proyectosiabipa-stack.github.io/BIPA-RADAR-/" target="_blank" rel="noopener noreferrer" aria-label="Abrir BIPA Radar"><span>Ingresar al módulo</span><svg viewBox="0 0 20 20"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="footer reveal" data-delay="430"><span>BIPA CORE <b>© 2026</b></span><span class="footer-center">INTELLIGENCE / OPERATIONS / GROWTH</span><span>CORE SYSTEM <i>v2.0</i></span></footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
