@@ -1,0 +1,10 @@
+# Sitio público: nunca subir datos de clientes sin cifrar.
+# Solo data.enc (cifrado) puede publicarse dentro de cada módulo.
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+*.gs
+data.js
+data.json
+.env

@@ -31,3 +31,6 @@ body{color:var(--text);background:var(--bg)}
 .portal-card{min-height:430px;backdrop-filter:none;will-change:auto;transition:border-color .25s ease,box-shadow .25s ease}.portal-card::before{animation:none;background:linear-gradient(115deg,transparent 25%,color-mix(in srgb,var(--accent) 44%,transparent),transparent 76%)}.portal-card:hover{transform:translateY(-3px)!important}.card-icon{margin-top:28px}.card-content{margin-top:24px}.card-glow{filter:blur(70px)}
 @media(max-width:820px){.hero{padding-top:45px;padding-bottom:42px}.hero__title{font-size:clamp(2.4rem,7.5vw,4rem)}.portal-card{min-height:420px}}
 @media(max-width:520px){.topbar{min-height:76px}.brand__logo{width:82px;height:46px}.brand__slogan{margin-top:-2px;font-size:.36rem;letter-spacing:.09em}.hero{padding:38px 22px 36px}.hero__signal{margin-bottom:16px}.hero__title{font-size:clamp(2.05rem,10.7vw,3rem);line-height:1}.hero__copy{margin-top:18px;font-size:.88rem;line-height:1.55}.portals{padding-top:42px}.portal-card{min-height:410px}.card-icon{margin-top:24px}.card-content{margin-top:21px}}
+
+/* Unificación: tres módulos en la cuadrícula */
+@media (min-width:980px){.portal-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}

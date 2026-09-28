@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1a13">
+  <meta name="robots" content="noindex,nofollow">
+  <title>BIPA Radar</title>
+  <link rel="icon" href="./logo.svg" type="image/svg+xml">
+  <script>
+    try {
+      const saved = localStorage.getItem("bipa:theme");
+      const dark = saved ? saved === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    } catch { document.documentElement.dataset.theme = "light"; }
+  </script>
+  <script type="module" crossorigin src="./app/index-DO8u5gsz.js"></script>
+  <link rel="modulepreload" crossorigin href="./app/charts-DHG-3D5Z.js">
+  <link rel="stylesheet" crossorigin href="./app/index-CDZKDYwb.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="#" data-nav="summary">
+        <span class="brandMark"><img src="./logo.svg" alt=""></span>
+        <span class="brandText"><strong>BIPA</strong><small>Radar de precios</small></span>
+      </a>
+      <nav class="nav">
+        <span class="navLabel">Radar</span>
+        <a href="#" data-nav="summary"><span data-icon="dashboard"></span><span>Resumen</span><em class="navBadge" id="priorityBadge"></em></a>
+        <a href="#analisis" data-nav="analysis"><span data-icon="barChart"></span><span>Análisis</span></a>
+        <a href="#calculadora" data-nav="calculator"><span data-icon="calculator"></span><span>Calculadora</span></a>
+        <a href="#metodologia" data-nav="methodology"><span data-icon="book"></span><span>Metodología</span></a>
+        <span class="navLabel">Otros módulos</span>
+        <div class="navLinks">
+          <a href="../"><span data-icon="home" data-size="15"></span>BIPA Core</a>
+          <a href="../inteligencia/"><span data-icon="users" data-size="15"></span>Inteligencia Comercial</a>
+          <a href="../atlas/"><span data-icon="map" data-size="15"></span>Atlas</a>
+        </div>
+      </nav>
+      <div class="sideFoot">
+        <div class="statusCard" id="statusCard">
+          <div class="statusLine"><i class="dot"></i><strong id="statusLabel">Conectando…</strong></div>
+          <small id="statusDetail">Leyendo Google Sheets</small>
+          <small class="period" id="periodText"></small>
+        </div>
+        <div class="sideActions">
+          <button class="iconButton" type="button" id="refreshBtn" data-tip="Actualizar datos desde Google Sheets"><span data-icon="refresh"></span></button>
+          <button class="iconButton" type="button" id="themeBtn" data-tip="Cambiar tema claro / oscuro"><span data-icon="moon"></span></button>
+          <button class="iconButton" type="button" id="lockBtn" data-tip="Bloquear: volver a pedir la clave en este dispositivo"><span data-icon="lock"></span></button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="topTitle">
+          <a class="mobileBrand" href="#" data-nav="summary"><img src="./logo.svg" alt="BIPA"></a>
+          <div>
+            <h1 id="viewTitle">Resumen</h1>
+            <p id="viewSubtitle">Dónde BIPA lidera en precio y qué merece atención</p>
+          </div>
+        </div>
+        <div class="topActions">
+          <button class="searchTrigger" type="button" id="paletteBtn" aria-label="Buscar">
+            <span data-icon="search"></span><span class="searchText">Buscar producto, comercio, marca…</span><kbd>Ctrl K</kbd>
+          </button>
+          <div class="segmented" id="modeToggle" role="group" aria-label="Base de comparación">
+            <button type="button" data-mode="unit" class="active">Por unidad</button>
+            <button type="button" data-mode="kg">Por kilo</button>
+          </div>
+          <button class="iconButton mobileOnly" type="button" id="themeBtnMobile" aria-label="Cambiar tema"><span data-icon="moon"></span></button>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- ===================== RESUMEN ===================== -->
+        <section class="view" data-view="summary">
+          <div class="card filterBar">
+            <div class="filterGrid">
+              <label class="field"><span>Producto BIPA que se compara <i class="help" data-tip="Es el producto BIPA que sirve como punto de partida. Reúne sus artículos equivalentes de otras marcas.">i</i></span><select id="referenceFilter"></select></label>
+              <label class="field"><span>Comercio</span><select id="clientFilter"></select></label>
+              <label class="field"><span>Marca observada</span><select id="brandFilter"></select></label>
+              <label class="field"><span>Resultado de precio <i class="help" data-tip="Por unidad compara el precio de cada presentación. Por kilo usa USD/kg y excluye artículos sin peso válido.">i</i></span><select id="statusFilter"></select></label>
+            </div>
+            <div class="filterFoot">
+              <label class="searchField"><span data-icon="search"></span><input id="searchInput" type="search" placeholder="Buscar producto, artículo o comercio…" autocomplete="off"></label>
+              <button class="button danger" type="button" id="prioritiesBtn"><span data-icon="alert"></span>Ver prioridades</button>
+              <button class="button subtle" type="button" id="resetBtn">Limpiar</button>
+            </div>
+            <div class="segmented modeToggleSm" role="group" aria-label="Base de comparación"><button type="button" data-mode="unit" class="active">Por unidad</button><button type="button" data-mode="kg">Por kilo</button></div>
+            <div class="chips" id="activeFilters"></div>
+            <p class="readHint" id="readHint"></p>
+          </div>
+
+          <div class="kpiGrid" id="kpis"></div>
+
+          <div class="grid insightRow">
+            <article class="card insight">
+              <span class="eyebrow"><span data-icon="spark"></span>Lectura ejecutiva</span>
+              <h2 id="heroStatement">Cargando lectura ejecutiva…</h2>
+              <p id="heroDetail">Preparando el panorama competitivo de BIPA.</p>
+              <p class="insightMeta" id="heroMeta"></p>
+            </article>
+            <div class="briefList" id="briefing"></div>
+          </div>
+
+          <div class="grid marketsRow">
+            <article class="card flush">
+              <div class="cardHead pad"><div><h3>Productos BIPA que merecen atención</h3><p>Ordenados por diferencia competitiva. Seleccione uno para ver el fundamento.</p></div><span class="chip neutral" id="marketCount">0 visibles</span></div>
+              <div class="marketList" id="marketList"></div>
+            </article>
+            <article class="card focusCard" id="focusCard"></article>
+          </div>
+        </section>
+
+        <!-- ===================== ANÁLISIS ===================== -->
+        <section class="view" data-view="analysis" hidden>
+          <div class="card toolbar">
+            <div class="toolbarText"><strong id="analysisTitle">Comparación equivalente</strong><small id="analysisSub">Misma selección de filtros que el Resumen.</small></div>
+            <div class="chips" id="analysisChips"></div>
+            <button class="button subtle" type="button" data-nav="summary"><span data-icon="filter"></span>Cambiar filtros</button>
+          </div>
+          <div class="grid analysisRow">
+            <article class="card">
+              <div class="cardHead"><div><h3 id="chartTitle">BIPA versus competidor equivalente</h3><p id="chartDescription"></p></div><span class="chip neutral" id="chartCount">0 productos</span></div>
+              <div class="legend"><span><i style="--c:var(--brand)"></i>BIPA</span><span><i style="--c:var(--neutral)"></i>Competidor más económico</span></div>
+              <div class="chart" id="comparisonChart"></div>
+            </article>
+            <div class="grid analysisSide">
+              <article class="card">
+                <div class="cardHead"><div><h3>Balance competitivo</h3><p>Distribución de la posición de precio de BIPA</p></div></div>
+                <div class="chart" id="statusChart"></div>
+              </article>
+              <article class="card gapCard" id="gapCard"></article>
+            </div>
+          </div>
+          <article class="card flush">
+            <div class="cardHead pad"><div><h3>Artículos consolidados</h3><p>Cuando un artículo se repite, se conserva su mayor precio dentro del mismo comercio, producto BIPA y marca.</p></div><span class="chip neutral" id="tableCount">0 artículos</span></div>
+            <div class="tableWrap tall"><table id="articleTable"></table></div>
+          </article>
+        </section>
+
+        <!-- ===================== CALCULADORA ===================== -->
+        <section class="view" data-view="calculator" hidden>
+          <article class="card insight compact">
+            <span class="eyebrow"><span data-icon="calculator"></span>Escenario de compra</span>
+            <h2>Estimador de precio del proveedor</h2>
+            <p>Convierte el artículo observado a precio por kilo y descuenta el porcentaje que el comercio retiene del precio de venta. Es un escenario de margen comercial, no un costo confirmado.</p>
+          </article>
+          <div class="grid calcRow">
+            <div class="grid calcLeft">
+              <article class="card">
+                <span class="eyebrow">1. Selecciona el producto</span>
+                <div class="calcFields">
+                  <label class="field"><span>Producto BIPA que se compara</span><select id="calcReference"></select></label>
+                  <label class="field"><span>Comercio <em>(opcional)</em></span><select id="calcClient"></select></label>
+                  <label class="field"><span>Artículo observado</span><select id="calcProduct"></select></label>
+                </div>
+                <div class="formulaBox" id="calcCard"></div>
+              </article>
+              <article class="card">
+                <div class="cardHead"><div><span class="eyebrow">2. Supuesto gerencial</span><h3>Porcentaje que retiene el comercio</h3><p>Se descuenta del precio de venta por kilo para estimar cuánto paga el comercio al proveedor.</p></div>
+                  <label class="marginInput"><input id="marginInput" type="number" min="0" max="99" value="50" aria-label="Porcentaje"><span>%</span></label></div>
+                <input id="marginRange" class="slider" type="range" min="0" max="90" value="50" aria-label="Porcentaje que retiene el comercio">
+                <div class="presets"><button type="button" class="preset" data-margin="20">20%</button><button type="button" class="preset" data-margin="30">30%</button><button type="button" class="preset" data-margin="40">40%</button><button type="button" class="preset active" data-margin="50">50%</button></div>
+              </article>
+            </div>
+            <div class="grid calcRight">
+              <div class="calcTiles">
+                <div class="calcTile"><span>Precio de venta / kg</span><b id="finished">-</b></div>
+                <div class="calcTile highlight"><span>Precio estimado proveedor / kg</span><b id="supplier">-</b></div>
+                <div class="calcTile"><span>Estimado media tonelada</span><b id="halfTon">-</b></div>
+                <div class="calcTile"><span>Estimado una tonelada</span><b id="ton">-</b></div>
+              </div>
+              <article class="card"><span class="eyebrow">Cálculo transparente</span><div class="formulaBox" id="formula"></div></article>
+              <article class="card"><span class="eyebrow">Margen real del comercio en productos BIPA</span><div class="formulaBox" id="clientMargin"></div></article>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== METODOLOGÍA ===================== -->
+        <section class="view" data-view="methodology" hidden>
+          <article class="card insight compact">
+            <span class="eyebrow"><span data-icon="book"></span>Metodología y auditoría</span>
+            <h2>Cómo se construye cada resultado del radar</h2>
+            <p>Reglas, fórmulas, límites y redondeos del sistema. Sirve para validar una comparación concreta sin modificar ningún dato de la hoja. <strong>Principio de lectura:</strong> BIPA solo se compara con competidores dentro del mismo comercio y el mismo producto BIPA de referencia; la base elegida, por unidad o por kilo, se aplica a toda la vista.</p>
+          </article>
+          <div class="grid two methodGrid">
+            <article class="card method"><span class="eyebrow">01 · Datos de entrada</span><h3>Campos que alimentan el cálculo</h3>
+              <table class="methodTable"><thead><tr><th>Campo</th><th>Uso en la plataforma</th></tr></thead><tbody><tr><td>Referencia para comparar</td><td>Producto BIPA que agrupa artículos equivalentes.</td></tr><tr><td>Cliente</td><td>Comercio donde ocurre la comparación.</td></tr><tr><td>Artículo y marca</td><td>Identifican el producto real y permiten separar BIPA de competencia.</td></tr><tr><td>Precio USD</td><td>Precio observado de venta al público.</td></tr><tr><td>Peso</td><td>Gramos de la presentación; obligatorio solo para el modo por kilo.</td></tr><tr><td>Mayorista / gran mayorista</td><td>Precios BIPA al comercio, usados únicamente en el cálculo de margen real.</td></tr></tbody></table></article>
+            <article class="card method"><span class="eyebrow">02 · Consolidación</span><h3>Cómo se tratan registros repetidos</h3>
+              <ol class="steps"><li><b>Clave de repetición</b><p>Se agrupa por <code>Comercio + Referencia + Artículo + Marca</code>.</p></li><li><b>Regla aplicada</b><p>Si hay varios precios para la misma clave, se conserva únicamente el <strong>precio observado más alto</strong>.</p></li><li><b>Resultado</b><p>Pantallas, gráficos, prioridades y calculadora trabajan sobre esos artículos consolidados.</p></li></ol>
+              <div class="formulaLine"><code>Precio consolidado = máximo(Precio USD de la misma clave)</code></div></article>
+            <article class="card method span2"><span class="eyebrow">03 · Base de comparación</span><h3>Dos maneras válidas de leer la posición de precio</h3>
+              <div class="grid two"><div><div class="formulaLine"><strong>Modo por unidad</strong><br><code>Valor comparable = Precio USD observado</code></div><p class="example">Compara el precio de venta de cada presentación tal como aparece en anaquel. El peso no modifica el resultado.</p></div><div><div class="formulaLine"><strong>Modo por kilo</strong><br><code>Valor comparable = (Precio USD / Peso en gramos) × 1.000</code></div><p class="example">Ejemplo: USD 2,30 y 216 g: <strong>(2,30 / 216) × 1.000 = USD 10,6481/kg</strong>. Si el peso es 0, vacío o el precio no es positivo, ese artículo no participa en modo kilo.</p></div></div>
+              <div class="callout info"><div><h3>No hay mezcla automática</h3><p>Al seleccionar “Por unidad”, todo el resumen y análisis usa precios de presentación. Al seleccionar “Por kilo”, todo usa USD/kg y excluye registros sin peso válido.</p></div></div></article>
+            <article class="card method span2"><span class="eyebrow">04 · Comparación competitiva</span><h3>Cómo se obtiene BIPA versus competencia</h3>
+              <ol class="steps"><li><b>Se forma una comparación válida</b><p>La llave es <code>Comercio + Referencia BIPA</code>. Nunca se cruzan comercios ni referencias diferentes.</p></li><li><b>Se elige el mejor valor de cada lado</b><p>Dentro de esa llave se toma el valor comparable BIPA más bajo y el valor comparable más bajo de todos los competidores.</p></li><li><b>Se calcula la brecha BIPA</b><p>La base siempre es el precio del competidor más económico.</p></li></ol>
+              <div class="formulaLine"><code>Brecha BIPA (%) = ((Valor BIPA − Valor competidor) / Valor competidor) × 100</code></div><p class="example">Ejemplo: BIPA USD 3,20 y competidor USD 2,54. <strong>((3,20 − 2,54) / 2,54) × 100 = +26,0%</strong>. Positivo significa que BIPA está más costoso; negativo, que está más económico.</p></article>
+            <article class="card method"><span class="eyebrow">05 · Estados</span><h3>Clasificación de cada comparación</h3>
+              <table class="methodTable"><thead><tr><th>Resultado</th><th>Regla</th></tr></thead><tbody><tr><td>Lidera</td><td>Brecha ≤ 0%. BIPA iguala o mejora al menor competidor.</td></tr><tr><td>Competitivo</td><td>Brecha &gt; 0% y ≤ 5%.</td></tr><tr><td>Vigilancia</td><td>Brecha &gt; 5% y ≤ 15%.</td></tr><tr><td>Prioridad</td><td>Brecha &gt; 15%. Requiere revisión comercial.</td></tr><tr><td>Sin comparación</td><td>Falta BIPA o competencia con valor válido para el modo elegido.</td></tr></tbody></table></article>
+            <article class="card method"><span class="eyebrow">06 · Indicadores</span><h3>Cómo se calculan los KPI</h3>
+              <div class="formulaLine"><strong>BIPA en buen precio</strong><br><code>((Lidera + Competitivo) / Comparables) × 100</code></div><div class="formulaLine"><strong>Prioridades</strong><br><code>Conteo de comparables con estado Prioridad</code></div><div class="formulaLine"><strong>Brecha promedio</strong><br><code>Suma de brechas / número de comparables</code></div><p class="example">La brecha promedio es simple, no ponderada: cada comercio-referencia comparable tiene el mismo peso.</p></article>
+            <article class="card method span2"><span class="eyebrow">07 · Calculadora de proveedor</span><h3>Estimación a partir del precio de venta y el margen asumido</h3><p class="example">Esta sección trabaja siempre por kilo. El porcentaje es el monto que el comercio retiene del precio de venta por kilo y se descuenta para estimar el pago al proveedor.</p>
+              <div class="grid two"><div><div class="formulaLine"><strong>Precio de venta por kilo</strong><br><code>Precio venta/kg = Precio USD / (Peso en gramos / 1.000)</code></div><div class="formulaLine"><strong>Margen monetario del comercio</strong><br><code>Margen USD/kg = Precio venta/kg × (Margen % / 100)</code></div></div><div><div class="formulaLine"><strong>Precio estimado del proveedor</strong><br><code>Proveedor/kg = Precio venta/kg − Margen USD/kg</code></div><div class="formulaLine"><strong>Escala de volumen</strong><br><code>Media tonelada = Proveedor/kg × 500 · Una tonelada = Proveedor/kg × 1.000</code></div></div></div>
+              <div class="callout warning"><div><h3>Alcance</h3><p>Es un escenario de margen comercial. No confirma el costo de materia prima, fabricación, empaque, logística ni la ganancia real del proveedor.</p></div></div></article>
+            <article class="card method span2"><span class="eyebrow">08 · Margen del comercio en BIPA</span><h3>Margen real cuando existen precios BIPA al comercio</h3><p class="example">Solo aparece para un artículo BIPA seleccionado y requiere el precio mayorista o gran mayorista registrado en la hoja.</p>
+              <div class="grid two"><div><div class="formulaLine"><strong>Ganancia por unidad</strong><br><code>Ganancia = Precio en anaquel − Precio BIPA al comercio</code></div><div class="formulaLine"><strong>Recargo sobre costo</strong><br><code>(Ganancia / Precio BIPA al comercio) × 100</code></div></div><div><div class="formulaLine"><strong>Margen sobre venta</strong><br><code>(Ganancia / Precio en anaquel) × 100</code></div><p class="example">El recargo responde cuánto se aumenta sobre el costo; el margen responde qué porcentaje del precio final queda como ganancia. No son el mismo indicador.</p></div></div></article>
+            <article class="card method span2"><span class="eyebrow">09 · Validación y redondeo</span><h3>Controles que evitan resultados falsos</h3>
+              <div class="accordion"><details open><summary>Datos numéricos inválidos</summary><p>Un precio vacío, no numérico o menor o igual a cero no es válido para cálculos de precio. En modo kilo, un peso vacío o menor o igual a cero también excluye el artículo.</p></details><details><summary>Precisión y visualización</summary><p>Las operaciones se realizan con la precisión completa de JavaScript. Los montos se muestran con dos decimales; las brechas y márgenes con un decimal; el KPI de BIPA en buen precio se redondea a cero decimales.</p></details><details><summary>Qué validar en la hoja antes de usar una decisión</summary><p>Confirme que comercio, referencia, artículo, marca, precio y peso correspondan a la misma observación. Para validar margen real BIPA, verifique además los campos de precio mayorista y gran mayorista.</p></details><details><summary>Qué no calcula la plataforma</summary><p>No estima demanda, inventario, promociones, impuestos, descuentos no registrados ni costos reales de producción. Compara precios observados y calcula los escenarios descritos aquí.</p></details></div></article>
+          </div>
+        </section>
+
+        <footer class="footer">BIPA Radar · Comparaciones calculadas exclusivamente a partir de los precios observados registrados en la hoja.</footer>
+      </main>
+    </div>
+
+    <nav class="tabbar" aria-label="Navegación">
+      <a href="#" data-nav="summary"><span data-icon="dashboard"></span><span>Resumen</span></a>
+      <a href="#analisis" data-nav="analysis"><span data-icon="barChart"></span><span>Análisis</span></a>
+      <a href="#calculadora" data-nav="calculator"><span data-icon="calculator"></span><span>Calcular</span></a>
+      <a href="#metodologia" data-nav="methodology"><span data-icon="book"></span><span>Método</span></a>
+    </nav>
+  </div>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="drawer" id="drawer" aria-hidden="true"></aside>
+
+  <div class="palette" id="palette" hidden>
+    <div class="paletteBox" role="dialog" aria-modal="true" aria-label="Buscar">
+      <label class="paletteInput"><span data-icon="search"></span><input id="paletteInput" type="text" placeholder="Buscar producto BIPA, comercio, marca, artículo o vista…" autocomplete="off"><kbd>Esc</kbd></label>
+      <div class="paletteResults" id="paletteResults" role="listbox"></div>
+    </div>
+  </div>
+
+</body>
+</html>

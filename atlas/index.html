@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1a13">
+  <meta name="robots" content="noindex,nofollow">
+  <title>BIPA Atlas</title>
+  <link rel="icon" href="./logo.svg" type="image/svg+xml">
+  <script>
+    try {
+      const saved = localStorage.getItem("bipa:theme");
+      const dark = saved ? saved === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    } catch { document.documentElement.dataset.theme = "light"; }
+  </script>
+  <script type="module" crossorigin src="./app/index-CUh287m3.js"></script>
+  <link rel="modulepreload" crossorigin href="./app/map-CN-MMHnt.js">
+  <link rel="stylesheet" crossorigin href="./app/index-BzPuSThv.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="#" data-nav="map">
+        <span class="brandMark"><img src="./logo.svg" alt=""></span>
+        <span class="brandText"><strong>BIPA</strong><small>Atlas comercial</small></span>
+      </a>
+      <nav class="nav">
+        <span class="navLabel">Atlas</span>
+        <a href="#" data-nav="map"><span data-icon="map"></span><span>Mapa</span></a>
+        <a href="#inteligencia" data-nav="intel"><span data-icon="crosshair"></span><span>Inteligencia territorial</span><em class="navBadge" id="riskBadge"></em></a>
+        <a href="#directorio" data-nav="directory"><span data-icon="list"></span><span>Directorio</span></a>
+        <span class="navLabel">Otros módulos</span>
+        <div class="navLinks">
+          <a href="../"><span data-icon="home" data-size="15"></span>BIPA Core</a>
+          <a href="../inteligencia/"><span data-icon="users" data-size="15"></span>Inteligencia Comercial</a>
+          <a href="../radar/"><span data-icon="target" data-size="15"></span>Radar</a>
+        </div>
+      </nav>
+      <div class="sideFoot">
+        <div class="statusCard" id="statusCard">
+          <div class="statusLine"><i class="dot"></i><strong id="statusLabel">Preparando…</strong></div>
+          <small id="statusDetail">Descifrando datos en este dispositivo</small>
+        </div>
+        <div class="sideActions">
+          <button class="iconButton" type="button" id="themeBtn" data-tip="Cambiar tema claro / oscuro"><span data-icon="moon"></span></button>
+          <button class="iconButton" type="button" id="lockBtn" data-tip="Bloquear: volver a pedir la clave en este dispositivo"><span data-icon="lock"></span></button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="topTitle">
+          <a class="mobileBrand" href="#" data-nav="map"><img src="./logo.svg" alt="BIPA"></a>
+          <div>
+            <h1 id="viewTitle">Mapa</h1>
+            <p id="viewSubtitle">Clientes y competencia por estado, zona y ubicación</p>
+          </div>
+        </div>
+        <div class="topActions">
+          <button class="searchTrigger" type="button" id="paletteBtn" aria-label="Buscar">
+            <span data-icon="search"></span><span class="searchText">Buscar cliente, código, zona…</span><kbd>Ctrl K</kbd>
+          </button>
+          <button class="iconButton mobileOnly" type="button" id="themeBtnMobile" aria-label="Cambiar tema"><span data-icon="moon"></span></button>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- ===================== MAPA ===================== -->
+        <section class="view" data-view="map">
+          <div class="card filterBar">
+            <div class="filterGrid">
+              <label class="searchField"><span data-icon="search"></span><input id="searchInput" type="search" placeholder="Cliente, código, dirección o teléfono…" autocomplete="off"></label>
+              <label class="field"><select id="typeFilter" aria-label="Tipo"><option value="">Clientes y competencia</option><option value="cliente">Solo clientes</option><option value="competencia">Solo competencia</option></select></label>
+              <label class="field"><select id="stateFilter" aria-label="Estado"></select></label>
+              <label class="field"><select id="zoneFilter" aria-label="Zona"></select></label>
+              <button class="button subtle" type="button" id="resetBtn">Limpiar</button>
+            </div>
+            <div class="chips" id="activeFilters"></div>
+          </div>
+
+          <div class="kpiGrid" id="kpis"></div>
+
+          <div class="grid mapRow">
+            <article class="card flush mapCard">
+              <div class="mapToolbar">
+                <label class="switch"><input type="checkbox" id="layerClients" checked>Clientes</label>
+                <label class="switch"><input type="checkbox" id="layerCompetitors" checked>Competencia</label>
+                <label class="switch"><input type="checkbox" id="layerThreat" checked>Radio competitivo</label>
+                <label class="radius"><span>Radio</span><input id="threatKm" type="range" min="10" max="120" step="5" value="35" aria-label="Radio competitivo en kilómetros"><b id="threatKmValue">35 km</b></label>
+                <span class="mapSpacer"></span>
+                <button class="button small" type="button" id="fitBtn" data-tip="Encuadrar todos los registros visibles"><span data-icon="maximize"></span>Ajustar mapa</button>
+                <button class="button small danger" type="button" id="riskModeBtn" data-tip="Solo clientes, con la tabla de cercanía a la competencia"><span data-icon="crosshair"></span>Riesgo cercano</button>
+              </div>
+              <div id="map" aria-label="Mapa de clientes y competencia"></div>
+              <div class="mapFoot"><span id="summary">0 registros</span><span>·</span><span>Las fábricas de la competencia aparecen en rojo.</span><span>·</span><span>Los puntos sin coordenadas exactas se ubican de forma aproximada en su localidad.</span></div>
+            </article>
+            <div class="grid mapSide">
+              <article class="card radarCard">
+                <div class="cardHead"><div><h3>Radar competitivo</h3><p>Presencia de la competencia frente a la cartera visible</p></div><span class="kpiIcon tone-bad"><span data-icon="swords" data-size="16"></span></span></div>
+                <div id="atlasPanel"></div>
+              </article>
+              <article class="card">
+                <div class="cardHead"><div><h3>Clientes por estado</h3><p>Toque un estado para filtrar</p></div></div>
+                <div class="bars" id="stateStats"></div>
+              </article>
+              <article class="card">
+                <div class="cardHead"><div><h3>Clientes por zona</h3><p>Toque una zona para filtrar</p></div></div>
+                <div class="bars" id="zoneStats"></div>
+              </article>
+            </div>
+          </div>
+
+          <article class="card flush">
+            <div class="cardHead pad"><div><h3>Registros</h3><p>Seleccione uno para ver su ficha y centrar el mapa.</p></div><span class="chip neutral" id="pageInfo">0-0 de 0</span></div>
+            <div class="list" id="list"></div>
+            <div class="pager"><button class="button small" type="button" id="prevBtn"><span data-icon="chevronLeft" data-size="15"></span>Anterior</button><span class="hint" id="pageHint"></span><button class="button small" type="button" id="nextBtn">Siguiente<span data-icon="chevronRight" data-size="15"></span></button></div>
+          </article>
+        </section>
+
+        <!-- ===================== INTELIGENCIA TERRITORIAL ===================== -->
+        <section class="view" data-view="intel" hidden>
+          <article class="card insight compact">
+            <span class="eyebrow"><span data-icon="crosshair"></span>Inteligencia territorial</span>
+            <h2 id="intelHeadline">Clientes cercanos a fábricas de competencia y concentración por zona.</h2>
+            <p id="intelText">Las distancias se calculan en línea recta entre la ubicación (exacta o aproximada) del cliente y cada fábrica rival registrada.</p>
+          </article>
+          <div class="kpiGrid" id="atlasMetrics"></div>
+          <article class="card flush">
+            <div class="cardHead pad"><div><h3 id="intelTableTitle">Clientes con competencia más cercana</h3><p id="intelTableSub"></p></div>
+              <div class="segmented" id="intelTabs" role="tablist"><button type="button" class="active" data-table="risk" role="tab">Cercanía</button><button type="button" data-table="comp" role="tab">Fábricas</button></div></div>
+            <div class="tableWrap tall"><table id="intelTable" class="clickable"></table></div>
+          </article>
+        </section>
+
+        <!-- ===================== DIRECTORIO ===================== -->
+        <section class="view" data-view="directory" hidden>
+          <div class="card toolbar">
+            <div class="toolbarText"><strong id="directoryTitle">Directorio</strong><small>Registros del filtro actual, con la fábrica rival más cercana.</small></div>
+            <div class="chips" id="directoryChips"></div>
+            <button class="button subtle" type="button" data-nav="map"><span data-icon="filter"></span>Cambiar filtros</button>
+            <label class="button subtle" data-tip="Carga temporal en este dispositivo: no modifica los datos publicados"><span data-icon="upload"></span>Cargar CSV<input id="csvInput" type="file" accept=".csv,text/csv" hidden></label>
+            <button class="button primary" type="button" id="exportBtn"><span data-icon="download"></span>Exportar CSV</button>
+          </div>
+          <article class="card flush"><div class="tableWrap tall"><table id="directoryTable" class="clickable"></table></div></article>
+        </section>
+
+        <footer class="footer">BIPA Atlas · Mapa base © OpenStreetMap · Los datos de clientes viajan cifrados y solo se leen con la clave del equipo.</footer>
+      </main>
+    </div>
+
+    <nav class="tabbar" aria-label="Navegación">
+      <a href="#" data-nav="map"><span data-icon="map"></span><span>Mapa</span></a>
+      <a href="#inteligencia" data-nav="intel"><span data-icon="crosshair"></span><span>Inteligencia</span></a>
+      <a href="#directorio" data-nav="directory"><span data-icon="list"></span><span>Directorio</span></a>
+      <a href="#" data-action="palette"><span data-icon="search"></span><span>Buscar</span></a>
+    </nav>
+  </div>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="drawer" id="drawer" aria-hidden="true"></aside>
+
+  <div class="palette" id="palette" hidden>
+    <div class="paletteBox" role="dialog" aria-modal="true" aria-label="Buscar">
+      <label class="paletteInput"><span data-icon="search"></span><input id="paletteInput" type="text" placeholder="Buscar cliente, código, teléfono, zona, estado o vista…" autocomplete="off"><kbd>Esc</kbd></label>
+      <div class="paletteResults" id="paletteResults" role="listbox"></div>
+    </div>
+  </div>
+
+</body>
+</html>
